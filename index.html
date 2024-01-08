@@ -136,14 +136,15 @@
                             <label for="modeloEditar">Modelo:</label>
                             <input type="text" id="modeloEditar" name="modelo" class="form-control" required>
                             <label for="anioEditar">Año:</label>
-                            <input type="number" id="anioEditar" name="anio" class="form-control" required>
+                            <input type="number" id="anioEditar" name="anio" class="form-control" required min="0">
                             <label for="colorEditar">Color:</label>
                             <input type="text" id="colorEditar" name="color" class="form-control" required>
                             <label for="precioEditar">Precio:</label>
-                            <input type="text" id="precioEditar" name="precio" class="form-control" required>
+                            <input type="number" id="precioEditar" name="precio" class="form-control" required min="0">
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Cambios</button>
                     </form>
+                    
                 </div>
             </div>
         </div>
