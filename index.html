@@ -149,114 +149,115 @@
             </div>
         </div>
     </div>
+<!-- ... (código previo) ... -->
+
 <script>
-        async function obtenerDatosCarros() {
-            try {
-                const response = await fetch('http://54.196.45.248:3023/api/carros');
-                if (!response.ok) {
-                    throw new Error('No se pudo obtener los datos de carros');
-                }
-                return await response.json();
-            } catch (error) {
-                console.error('Error al obtener carros:', error);
-                return [];
+    async function obtenerDatosCarros() {
+        try {
+            const response = await fetch('http://54.196.45.248:3023/api/carros');
+            if (!response.ok) {
+                throw new Error('No se pudo obtener los datos de carros');
             }
+            return await response.json();
+        } catch (error) {
+            console.error('Error al obtener carros:', error);
+            return [];
         }
+    }
 
-        async function mostrarCarrosEnTabla() {
+    async function mostrarCarrosEnTabla() {
+        const tablaBody = document.getElementById('carTableBody');
+        tablaBody.innerHTML = '';
+        try {
+            const data = await obtenerDatosCarros();
+
+            data.forEach(carro => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td class="table-danger">${carro.id}</td>
+                    <td class="table-danger">${carro.marca}</td>
+                    <td class="table-danger">${carro.modelo}</td>
+                    <td class="table-danger">${carro.anio}</td>
+                    <td class="table-danger">${carro.color}</td>
+                    <td class="table-danger">${carro.precio}</td>
+                    <td class="table-danger">
+                        <button onclick="editarCarro(${carro.id})" class="btn btn-primary">Editar</button>
+                        <button onclick="eliminarCarro(${carro.id})" class="btn btn-danger">Eliminar</button>
+                    </td>
+                `;
+                tablaBody.appendChild(fila);
+            });
+        } catch (error) {
+            console.error('Error al mostrar carros en la tabla:', error);
+        }
+    }
+
+    window.onload = mostrarCarrosEnTabla;
+
+    document.getElementById('crearCarroForm').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Evita que el formulario se envíe por defecto
+
+        const marca = document.getElementById('marca').value;
+        const modelo = document.getElementById('modelo').value;
+        const anio = document.getElementById('anio').value;
+        const color = document.getElementById('color').value;
+        const precio = document.getElementById('precio').value;
+
+        const data = {
+            marca,
+            modelo,
+            anio,
+            color,
+            precio
+        };
+
+        try {
+            const response = await fetch('http://54.196.45.248:3023/api/carros', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (!response.ok) {
+                throw new Error('No se pudo agregar el carro');
+            }
+
+            this.reset();
+
+            await mostrarCarrosEnTabla();
+        } catch (error) {
+            console.error('Error al agregar el carro:', error);
+        }
+    });
+
+    async function eliminarCarro(id) {
+        try {
             const tablaBody = document.getElementById('carTableBody');
-            tablaBody.innerHTML = '';
-            try {
-                const data = await obtenerDatosCarros();
+            const filas = tablaBody.getElementsByTagName('tr');
 
-                data.forEach(carro => {
-                    const fila = document.createElement('tr');
-                    fila.innerHTML = `
-                        <td class="table-danger">${carro.id}</td>
-                        <td class="table-danger">${carro.marca}</td>
-                        <td class="table-danger">${carro.modelo}</td>
-                        <td class="table-danger">${carro.anio}</td>
-                        <td class="table-danger">${carro.color}</td>
-                        <td class="table-danger">${carro.precio}</td>
-                        <td class="table-danger">
-                            <button onclick="editarCarro(${carro.id})" class="btn btn-primary">Editar</button>
-
-                            <button onclick="eliminarCarro(${carro.id})" class="btn btn-danger">Eliminar</button>
-                        </td>
-                    `;
-                    tablaBody.appendChild(fila);
-                });
-            } catch (error) {
-                console.error('Error al mostrar carros en la tabla:', error);
+            for (let i = 0; i < filas.length; i++) {
+                const celdaId = filas[i].getElementsByTagName('td')[0];
+                if (celdaId.textContent === id.toString()) {
+                    tablaBody.removeChild(filas[i]);
+                    break;
+                }
             }
+
+            const response = await fetch(`http://54.196.45.248:3023/api/carros/${id}`, {
+                method: 'DELETE',
+            });
+
+            if (!response.ok) {
+                throw new Error('No se pudo eliminar el carro');
+            }
+
+            console.log(`Carro con ID ${id} eliminado`);
+        } catch (error) {
+            console.error('Error al eliminar carro:', error);
         }
-
-        window.onload = mostrarCarrosEnTabla;
-
-        document.getElementById('crearCarroForm').addEventListener('submit', async function (event) {
-            event.preventDefault(); // Evita que el formulario se envíe por defecto
-
-            const marca = document.getElementById('marca').value;
-            const modelo = document.getElementById('modelo').value;
-            const anio = document.getElementById('anio').value;
-            const color = document.getElementById('color').value;
-            const precio = document.getElementById('precio').value;
-
-            const data = {
-                marca,
-                modelo,
-                anio,
-                color,
-                precio
-            };
-
-            try {
-                const response = await fetch('http://54.196.45.248:3023/api/carros', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (!response.ok) {
-                    throw new Error('No se pudo agregar el carro');
-                }
-
-                this.reset();
-
-                await mostrarCarrosEnTabla();
-            } catch (error) {
-                console.error('Error al agregar el carro:', error);
-            }
-        });
-
-        async function eliminarCarro(id) {
-            try {
-                const tablaBody = document.getElementById('carTableBody');
-                const filas = tablaBody.getElementsByTagName('tr');
-
-                for (let i = 0; i < filas.length; i++) {
-                    const celdaId = filas[i].getElementsByTagName('td')[0];
-                    if (celdaId.textContent === id.toString()) {
-                        tablaBody.removeChild(filas[i]);
-                        break;
-                    }
-                }
-
-                const response = await fetch(`http://54.196.45.248:3023/api/carros/${id}`, {
-                    method: 'DELETE',
-                });
-
-                if (!response.ok) {
-                    throw new Error('No se pudo eliminar el carro');
-                }
-
-                console.log(`Carro con ID ${id} eliminado`);
-            } catch (error) {
-                console.error('Error al eliminar carro:', error);
-            }
-        }
+    }
 
     async function editarCarro(id) {
         try {
@@ -283,7 +284,8 @@
             console.error('Error al editar el carro:', error);
         }
     }
-        document.getElementById('editarCarroForm').addEventListener('submit', async function (event) {
+
+    document.getElementById('editarCarroForm').addEventListener('submit', async function (event) {
         event.preventDefault(); // Evitar que el formulario se envíe por defecto
 
         const id = document.getElementById('carIdEditar').value;
@@ -301,34 +303,32 @@
             precio
         };
 
-        // Depuración: Imprime los datos a enviar en la consola
-
-
         try {
             const response = await fetch(`http://54.196.45.248:3023/api/carros/${id}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-        });
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
 
-        if (!response.ok) {
-
-                    throw new Error('No se pudo editar el carro');
-                }
-                
-                // Limpiar el formulario después de enviar los datos
-                this.reset();
-                // Volver a cargar la tabla con los datos actualizados después de editar el carro
-                await mostrarCarrosEnTabla();
-                // Cerrar el modal después de editar el carro
-                editarCarroModal.hide();
-            } catch (error) {
-                console.error('Error al editar el carro:', error);
+            if (!response.ok) {
+                throw new Error('No se pudo editar el carro');
             }
-        });
 
-    </script>
+            // Limpiar el formulario después de enviar los datos
+            this.reset();
+            // Volver a cargar la tabla con los datos actualizados después de editar el carro
+            await mostrarCarrosEnTabla();
+            // Cerrar el modal después de editar el carro
+            editarCarroModal.hide();
+        } catch (error) {
+            console.error('Error al editar el carro:', error);
+        }
+    });
+</script>
+
+<!-- ... (código posterior) ... -->
+
 </body>
 </html>
