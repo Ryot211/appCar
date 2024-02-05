@@ -36,7 +36,7 @@
                     modelo: "Por favor, ingresa el modelo",
                     anio: {
                         required: "Por favor, ingresa el año",
-                        min: "El año debe ser mayor o igual a 0"
+                        min: "El año debe ser mayor o igual a 1900"
                     },
                     color: "Por favor, ingresa el color",
                     precio: {
@@ -128,16 +128,26 @@
                 <!-- Formulario para crear un nuevo carro -->
                 <form id="crearCarroForm" class="form">
                     <div class="mb-3">
+                        <div class="form-group mb-3">
                         <label for="marca" class="form-label">Marca:</label>
                         <input type="text" id="marca" name="marca" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
                         <label for="modelo">Modelo:</label>
                         <input type="text" id="modelo" name="modelo" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
                         <label for="anio">Año:</label>
                         <input type="number" id="anio" name="anio" class="form-control" required min="0">
+                        </div>
+                        <div class="form-group mb-3">
                         <label for="color">Color:</label>
                         <input type="text" id="color" name="color" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-3">
                         <label for="precio">Precio:</label>
                         <input type="number" id="precio" name="precio" class="form-control" required min="0">
+                        </div>    
                     </div>
                     <button type="submit" id="crearCarroBtn" class="btn btn-dark">Crear Carro</button>
                 </form>
