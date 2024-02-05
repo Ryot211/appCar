@@ -216,7 +216,7 @@
 <script>
     async function obtenerDatosCarros() {
         try {
-            const response = await fetch('http://54.90.243.234:3023/api/carros');
+            const response = await fetch('http://35.170.235.50:3023/api/carros');
             if (!response.ok) {
                 throw new Error('No se pudo obtener los datos de carros');
             }
@@ -274,7 +274,7 @@
         };
 
         try {
-            const response = await fetch('http://54.90.243.234:3023/api/carros', {
+            const response = await fetch('http://35.170.235.50:3023/api/carros', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -307,7 +307,7 @@
                 }
             }
 
-            const response = await fetch(`http://54.90.243.234:3023/api/carros/${id}`, {
+            const response = await fetch(`http://35.170.235.50:3023/api/carros/${id}`, {
                 method: 'DELETE',
             });
 
@@ -323,7 +323,7 @@
 
     async function editarCarro(id) {
         try {
-            const response = await fetch(`http://54.90.243.234:3023/api/carros/${id}`);
+            const response = await fetch(`http://35.170.235.50:3023/api/carros/${id}`);
             if (!response.ok) {
                 throw new Error('No se pudo obtener los datos del carro para editar');
             }
@@ -366,7 +366,7 @@
         };
 
         try {
-            const response = await fetch(`http://54.90.243.234:3023/api/carros/${id}`, {
+            const response = await fetch(`http://35.170.235.50:3023/api/carros/${id}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
